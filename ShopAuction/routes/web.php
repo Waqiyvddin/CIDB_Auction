@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VerificationEmailController;
+use App\Http\Livewire\BuyUpload;
 use App\Http\Livewire\Splash;
 use App\Http\Livewire\Staf;
 use App\Http\Livewire\Test;
@@ -49,4 +50,5 @@ Route::get('/language/{locale}', function ($locale) {
     return redirect()->back();
 });
 
-Route::get('/staf', Staf::class)->name('staf');
+Route::get('/staf', Staf::class)->middleware('auth')->name('staf');
+Route::get('/buy/upload', BuyUpload::class)->middleware('auth')->name('buyupload');

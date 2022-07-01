@@ -1,32 +1,27 @@
-@include('partials/start')
+@include('partials/start2')
 
 @livewireStyles
 @yield('css')
-@include('partials/navbar')
+@include('partials/navbar2')
 
 
 <!-- strat wrapper -->
 <div class="h-screen flex flex-row flex-wrap">
 
-    @include('partials/sidebar3')
+    @include('partials/sidebar2')
     @livewire('float-notification')
     <!-- strat content -->
-    <div class="bg-gray-100 flex-1 p-6 md:mt-16">
-
-        <div class="container mt-1">
-            <div class="row mt-1 justify-content-center">
-                <div class="mt-1 col-md-12">
+    <div class="container">
+    <section class="section main-section">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-content">
                             <!-- General Report -->
-                            {{-- @yield('content') --}}
+                            @yield('content')
                             {{ $slot }}
                             <!-- End General Report -->
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+    </section>
     </div>
     <!-- end content -->
 </div>
@@ -34,4 +29,4 @@
 @stack('modals')
 @livewireScripts
 @yield('js')
-@include('partials.end')
+@include('partials.end2')

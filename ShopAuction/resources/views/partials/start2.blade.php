@@ -8,8 +8,8 @@
     {{-- downloaded the file --}}
     <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
     {{-- <link rel="stylesheet" href="{{ asset('css/pro.min.css')}}"> --}}
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}"">
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}""> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}"">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.min.css');

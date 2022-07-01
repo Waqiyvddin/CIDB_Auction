@@ -8,6 +8,6 @@ class Splash extends Component
 {
     public function render()
     {
-        return view('livewire.splash');
+        return view('livewire.splash')->layout('layouts.public');
     }
 }

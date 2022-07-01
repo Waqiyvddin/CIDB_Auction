@@ -33,7 +33,15 @@
                     </th>
                     <th scope="col"
                         class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        {{ __('Staf No') }}
+                    </th>
+                    <th scope="col"
+                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                         Date Register
+                    </th>
+                    <th scope="col"
+                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        {{ __('Status') }}
                     </th>
                     <th scope="col"
                         class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -52,9 +60,18 @@
                             {{ $item->email }}
                         </td>
                         <td class="px-6 py-4">
+                            {{ $item->staf_no }}
+                        </td>
+                        <td class="px-6 py-4">
                             <span class="relative inline-block px-3 py-1 font-semibold text-orange-900 leading-tight">
                                 <span aria-hidden class="absolute inset-0 bg-orange-200 opacity-50 rounded-full"></span>
                                 <span class="relative">{{ $item->created_at }}</span>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="relative inline-block px-3 py-1 font-semibold text-orange-900 leading-tight">
+                                <span aria-hidden class="absolute inset-0 bg-orange-200 opacity-50 rounded-full"></span>
+                                <span class="relative">{{ $item->user_status }}</span>
                             </span>
                         </td>
 

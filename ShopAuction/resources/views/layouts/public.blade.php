@@ -3,34 +3,13 @@
 @livewireStyles
 @yield('css')
 
-
-
-<!-- strat wrapper -->
-<div class="h-screen flex flex-row flex-wrap">
-
-    
-    @livewire('float-notification')
-    <!-- strat content -->
-    <div class="bg-gray-100 flex-1 p-6 md:mt-16">
-
-        <div class="container mt-1">
-            <div class="row mt-1 justify-content-center">
-                <div class="mt-1 col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- General Report -->
-                            @yield('content')
-                            {{ $slot }}
-                            <!-- End General Report -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="mx-20 my-20 px-20">
+    <div class="card">
+        <div class="card-body">
+            {{ $slot }}
         </div>
     </div>
-    <!-- end content -->
 </div>
-<!-- end wrapper -->
 @stack('modals')
 @livewireScripts
 @yield('js')

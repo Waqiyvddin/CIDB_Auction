@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Parameter;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -27,9 +28,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer('partials.language_switcher', function ($view) {
-            $view->with('current_locale', app()->getLocale());
-            $view->with('available_locales', config('app.available_locales'));
-        });
+        view()->composer(
+            '*',
+            function ($view) {
+                $global_product_category = Parameter::where('parameter_name', 'category')
+                ->orderBy('type_id')
+                ->get();
+                // dd($global_product_category);
+                $view->with(
+                    compact(
+                        'global_product_category',
+                        
+                       
+                    )
+                );
+                $view->with('current_locale', app()->getLocale());
+                $view->with('available_locales', config('app.available_locales'));
+            });
+        // view()->composer('partials.language_switcher', function ($view) {
+            
+        // });
     }
 }
