@@ -14,7 +14,7 @@
     <div class="flex flex-col overflow-y-auto gap-4 rounded-md border-2 border-green-600 bg-white p-4">
 
         <!-- START drop files @ images div -->
-        <div class="grid grid-flow-row grid-cols-5 gap-2">
+        <div class="grid grid-flow-row grid-cols-5 sm:grid-cols-1 gap-2">
             @foreach ($image_no as $key => $index)
                 <div
                     class="h-30 rounded-md border-2 border-dashed border-green-600 bg-white p-2 sm:h-64 sm:flex-row sm:p-4">
@@ -106,7 +106,7 @@
                     <label for="product_category"
                         class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Product
                         Category</label>
-                    <select id="product_category" name="product_category" wire:model="product_category"
+                    <select id="product_category" name="product_category" wire:model="product_category" required
                         class="form-select block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
                         <option>Please Choose</option>
                         @php
@@ -253,19 +253,43 @@
                             <input name="product_visibility" type="radio"
                                 class="form-checkbox h-6 w-6 text-pink-500" value="PV01"
                                 wire:model="product_visibility" />
-                            <span class="ml-2 text-black">Staff</span>
+                            <span class="ml-2 text-black text-sm">Staff</span>
                         </label>
                         <label class="inline-flex items-center">
                             <input name="product_visibility" type="radio"
                                 class="form-checkbox h-6 w-6 text-green-500" value="PV02"
                                 wire:model="product_visibility" />
-                            <span class="ml-2 text-black">Public</span>
+                            <span class="ml-2 text-black text-sm font-medium">Public</span>
                         </label>
                     </div>
                 </div>
             </div>
         </div>
         <!-- stock no div -->
+        <div>
+            <label for="product_visibility"
+                class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Bidding event:</label>
+            <div class="flex flex-row gap-2 text-sm text-gray-700">
+                <label for="birthdaytime">Start Bid (date and time):</label>
+                <input wire:model="bid_start_datetime" required class="text-blue-700" type="datetime-local"
+                    id="birthdaytime" name="birthdaytime">
+
+                <label for="birthdaytime">End Bid (date and time):</label>
+                <input wire:model="bid_end_datetime" required class="text-blue-700" type="datetime-local"
+                    id="birthdaytime" name="birthdaytime">
+            </div>
+            <div class="flex flex-row gap-2 text-sm text-gray-700">
+                <label for="product_discount"
+                    class="inline-flex items-center mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Loop
+                    <input id="bid_isloop_id" wire:model="bid_isloop" type="checkbox" class="form-checkbox text-pink-500" />
+
+                </label>
+                <div id="div_duration" class="{{$showDivDuration}}">
+                    <label for="birthdaytime">Duration (minute)</label>
+                    <input wire:model="ifloop_duration" required class="text-blue-700 w-20 pl-3" type="number">
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- START Button div -->
@@ -305,4 +329,19 @@
             /* translate-x-7 */
         }
     </style>
+
+    <script>
+        $(document).ready(function() {
+            // $('#bid_isloop_id').change(function() {
+            //     if (this.checked) {
+
+            //         $('#div_duration').show();
+            //     } else {
+            //         $('#div_duration').hide();
+
+            //     }
+            // });
+        });
+    </script>
+
 </div>

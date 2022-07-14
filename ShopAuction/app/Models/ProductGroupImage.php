@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductStatusLog extends Model
+class ProductGroupImage extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'status',
-        'status_by'        
+        'productgroup_id',
+        'image_path',
+        'image_name',
+        'image_index',
     ];
 }

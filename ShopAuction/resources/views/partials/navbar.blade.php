@@ -4,12 +4,20 @@
 
     <!-- logo -->
     <div class="flex-none w-56 flex flex-row items-center">
-        <img src="{{ asset('img/logo_cidb.png') }}" class="w-40 flex-none">
+        <a href="{{ route('splash') }}">
+            <img src="{{ asset('img/logo_cidb.png') }}" class="w-40 flex-none">
+        </a>
         {{-- <strong class="capitalize ml-1 flex-1">{{ config('app.name') }}</strong> --}}
 
-        <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
+        {{-- <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
             <i class="fad fa-list-ul"></i>
-        </button>
+        </button> --}}
+
+        <section class="home-section">
+            <div class="home-content">
+                <i class='bx bx-menu'></i>
+            </div>
+        </section>
     </div>
     <!-- end logo -->
 
@@ -21,10 +29,10 @@
 
     <!-- navbar content -->
     <div id="navbar"
-        class="animated md:hidden md:fixed md:top-0 md:w-full md:left-0 md:mt-16 md:border-t md:border-b md:border-gray-200 md:p-10 md:bg-white flex-1 pl-3 flex flex-row flex-wrap justify-between items-center md:flex-col md:items-center">
+        class="animated md:hidden md:fixed md:top-0 md:w-full md:left-0 md:mt-16 md:border-t md:border-b md:border-gray-200 md:p-10 md:bg-white flex-1 pl-3 flex flex-row-reverse flex-wrap justify-between items-center md:flex-col md:items-center">
         <!-- left -->
-        <div
-            class="text-gray-600 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
+        {{-- <div
+            class=" text-gray-600 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
             <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
                     class="fad fa-envelope-open-text"></i></a>
             <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
@@ -33,10 +41,10 @@
                     class="fad fa-check-circle"></i></a>
             <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
                     class="fad fa-calendar-exclamation"></i></a>
-        </div>
+        </div> --}}
         <!-- end left -->
 
-        <div class="flex-row-reverse items-center">
+        <div class="flex flex-row-reverse items-center">
             <div class="flex flex-col">
 
 
@@ -93,10 +101,10 @@
                     <!-- end user -->
 
                     <!-- notifcation -->
-                    {{-- @livewire('modal-notification') --}}
+                    @livewire('modal-notification')
                     <!-- end notifcation -->
-                    
-                           
+
+
                     <!-- messages -->
                     <div class="dropdown relative mr-5 md:static">
 
@@ -209,6 +217,10 @@
                     <div class="relative mr-5 md:static">
                         @include('partials.language_switcher')
                     </div>
+
+                    
+                    @livewire('modal-cart')
+                    
 
                 </div>
                 <!-- end right -->

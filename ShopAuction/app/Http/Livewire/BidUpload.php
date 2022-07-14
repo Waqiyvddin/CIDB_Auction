@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\BidInfo;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductGroup;
@@ -10,9 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class BuyUpload extends Component
+class BidUpload extends Component
 {
-
     use WithFileUploads;
 
     public $productgroup_id;
@@ -26,20 +26,20 @@ class BuyUpload extends Component
     public $product_quantity = 1;
     public $product_asset_no = [];
     public $product_serial_no = [];
-    public $product_isDiscounted = false;
+    public $product_isDiscounted;
     public $product_visibility;
+    public $bid_start_datetime;
+    public $bid_end_datetime;
+    public $bid_isloop;
+    public $showDivDuration = 'hidden';
+    public $ifloop_duration;
     public $inputs = [];
     public $image_no = [];
     public $image_path = [];
 
-
     public function mount($productgroup_id)
     {
         $this->productgroup_id = $productgroup_id;
-
-        for ($i = 0; $i < $this->product_quantity; $i++) {
-            array_push($this->inputs, $i);
-        }
 
         for ($i = 0; $i < 5; $i++) {
             array_push($this->image_no, $i);
@@ -80,12 +80,33 @@ class BuyUpload extends Component
                 }
             }
         }
-        
+
+        for ($i = 0; $i < $this->product_quantity; $i++) {
+            array_push($this->inputs, $i);
+        }
+
+        $bidinfo = BidInfo::where('productgroup_id', $this->productgroup_id)->get();
+        if (count($bidinfo) > 0) {
+            $bidinfo_startdate = $bidinfo[0]['start_date'];
+            $bidinfo_starttime = $bidinfo[0]['start_time'];
+            $bidinfo_enddate = $bidinfo[0]['end_date'];
+            $bidinfo_endtime = $bidinfo[0]['end_time'];
+            $this->bid_start_datetime = $bidinfo_startdate . 'T' . $bidinfo_starttime;
+            $this->bid_end_datetime = $bidinfo_enddate . 'T' . $bidinfo_endtime;
+            $this->bid_isloop = $bidinfo[0]['isLoop'];
+            if ($this->bid_isloop == 1) {
+                $this->bid_isloop = true;
+                $this->showDivDuration = 'block';
+                $this->ifloop_duration = $bidinfo[0]['duration_minute'];
+            }else{
+                $this->bid_isloop = false;
+            }
+        }
         // dd($this->image_path);
     }
     public function render()
     {
-        return view('livewire.buy-upload');
+        return view('livewire.bid-upload');
     }
 
     public function add()
@@ -102,6 +123,8 @@ class BuyUpload extends Component
     public function param($type)
     {
         // dd($this);
+
+        // dd($datetime);
         // dd($type);
 
         if ($type == 'savedraft') {
@@ -119,6 +142,8 @@ class BuyUpload extends Component
             [
                 'product_picture.*' => 'mimes:jpg,jpeg|max:6000',
                 'product_title' => 'required|max:30',
+                'product_category' => 'required',
+                'ifloop_duration' => 'min:1',
 
             ],
             [
@@ -126,12 +151,16 @@ class BuyUpload extends Component
                 'product_picture.*.mimes' => 'File type must be jpeg/jpg',
                 'product_picture.*.max' => 'Your file size must less than 6MB',
                 'product_title.required' => 'Please fill :attribute',
+                'product_category.required' => 'Please fill :attribute',
                 'product_title.max' => 'Your title is too long. Max is 30 characters',
+                'ifloop_duration.min' => 'Your loop duration must be more than 1 minute',
 
             ],
             [
                 'product_picture' => 'Product picture',
                 'product_title' => 'Product title',
+                'product_category' => 'Product category',
+                'ifloop_duration' => 'If loop',
 
             ]
         );
@@ -152,14 +181,14 @@ class BuyUpload extends Component
                 'isDiscounted' => $this->product_isDiscounted,
                 // 'discount_percent'=> $this->
                 'visibility' => $this->product_visibility,
-                'for' => 'PF01', //PF01=Buy
+                'for' => 'PF02', //PF01=Buy
                 'status' => 'PS01' //PS01=Draft
 
             ]
         );
 
         // dd($this->product_category);
-        
+
         ProductCategory::updateOrCreate(
             [
                 'productgroup_id' =>  $this->productgroup_id,
@@ -168,7 +197,7 @@ class BuyUpload extends Component
                 'subcategory' => $this->product_category,
             ]
         );
-        
+
         foreach ($this->product_asset_no as $key => $value) {
             $product = Product::updateOrCreate(
                 [
@@ -182,7 +211,7 @@ class BuyUpload extends Component
                 ]
             );
         }
-        // dd($this->product_picture);
+        // dd(empty($this->product_picture));
 
         if (!empty($this->product_picture)) {
             foreach ($this->product_picture as $key => $image) {
@@ -204,8 +233,32 @@ class BuyUpload extends Component
                     ]
                 );
             }
-            $this->refreshPage();
         }
+        // dd($this->bid_start_datetime);
+        if (!$this->bid_isloop) {
+            $this->ifloop_duration = 0;
+            // $this->bid_isloop = '0';
+        } else {
+            // $this->bid_isloop = '1';
+        }
+        // dd($this->bid_isloop);
+        // dd(intval($this->ifloop_duration));
+        $bid_start_datetime = explode('T', $this->bid_start_datetime);
+        $bid_end_datetime = explode('T', $this->bid_end_datetime);
+        BidInfo::updateOrCreate(
+            [
+                'productgroup_id' =>  $this->productgroup_id,
+            ],
+            [
+                'start_date' => $bid_start_datetime[0],
+                'start_time' => $bid_start_datetime[1],
+                'end_date' => $bid_end_datetime[0],
+                'end_time' => $bid_end_datetime[1],
+                'duration_minute' => ($this->ifloop_duration),
+                'isLoop' => $this->bid_isloop
+            ]
+        );
+        $this->refreshPage();
     }
 
     public function preview()
@@ -239,7 +292,17 @@ class BuyUpload extends Component
 
     public function backto_buylist()
     {
-        
-        return redirect()->route('buylist');
+
+        return redirect()->route('bidlist');
+    }
+
+    public function updatedBidIsloop()
+    {
+        // dd($this);
+        if ($this->bid_isloop) {
+            $this->showDivDuration = 'block';
+        } else {
+            $this->showDivDuration = 'hidden';
+        }
     }
 }

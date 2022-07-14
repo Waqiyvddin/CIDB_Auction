@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductStatusLog extends Model
+class Notification extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'status',
-        'status_by'        
+        'user_id',
+        'message',
+        'isRead'
     ];
 }

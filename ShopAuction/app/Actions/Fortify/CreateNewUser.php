@@ -20,12 +20,13 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
+        // dd($input['isStaf']);
         Validator::make(
             $input,
             [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'stafno' => ['required', 'numeric', 'min:4'],
+                // 'stafno' => [ 'min:4'],
                 'password' => $this->passwordRules(),
                 'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
             ],
@@ -40,11 +41,27 @@ class CreateNewUser implements CreatesNewUsers
             ]
         )->validate();
 
-        return User::create([
+        // return User::create([
+        //     'name' => $input['name'],
+        //     'email' => $input['email'],
+        //     'staf_no' => $input['stafno'],
+        //     'password' => Hash::make($input['password']),
+        // ]);
+
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'staf_no' => $input['stafno'],
             'password' => Hash::make($input['password']),
         ]);
+
+        if(isset($input['isStaf'])){
+            $user->assignRole([3]);
+        }else{
+            $user->assignRole([2]);
+        }
+
+        return $user;
+        
     }
 }

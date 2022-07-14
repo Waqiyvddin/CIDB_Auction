@@ -1,72 +1,109 @@
 <div>
     {{-- Stop trying to control. --}}
     <!-- component -->
-    <div class="text-black">Product Group ID : {{ $productgroup_id }}</div>
-    @if ($errors->any())
-        <div class="alert alert-danger text-black">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    <div class="text-black">Preview for Product Group ID : {{ $productgroup_id }}</div>
+
     <div class="flex flex-col overflow-y-auto gap-4 rounded-md border-2 border-green-600 bg-white p-4">
 
-        <!-- START drop files @ images div -->
-        <div class="grid grid-flow-row grid-cols-5 gap-2">
-            @foreach ($image_no as $key => $index)
-                <div
-                    class="h-30 rounded-md border-2 border-dashed border-green-600 bg-white p-2 sm:h-64 sm:flex-row sm:p-4">
-                    <div class="bg-white mx-2 sm:p-2">
+        {{-- CAROUSEL start --}}
+        <div
+            class="flex select-none flex-col gap-5 rounded-md border-2 border-dashed border-green-600 bg-white p-2 sm:h-96 sm:flex-row sm:p-4">
+            <div class="flex h-auto flex-1 flex-col  sm:p-2">
 
-                        <label for="dropzone-file"
-                            class="mx-auto cursor-pointer flex max-w-lg flex-col items-center rounded-xl bg-white  text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                            </svg>
-
-                            <h2 class="mt-4 text-sm font-medium text-gray-700 tracking-wide">Product preview
-                                {{ $index + 1 }}</h2>
-                            @if (count($image_path) > 0 && array_key_exists($index, $image_path))
-                                <img height="150" width="150" src="{{ asset($image_path[$index]) }}">
-                            @endif
-                            {{-- <p class="mt-2 text-gray-500 tracking-wide">Upload or darg & drop your file SVG, PNG, JPG or
-                                GIF. </p> --}}
-                            <div class="grid grid-flow-col w-full align-middle">
-                                <input wire:model="product_picture.{{ $index }}" type="file" />
-                                <div wire:loading wire:target="product_picture">Uploading...</div>
+                <div class="carousel container relative  mx-auto bg-gray-500" style="max-width:1600px;">
+                    <div class="carousel-inner relative w-full overflow-hidden sm:h-80 h-56">
+                        @foreach ($image_path as $index => $item)
+                            <input class="carousel-open" type="radio" id="carousel-{{ $index + 1 }}" name="carousel"
+                                aria-hidden="true" hidden=""
+                                @if ($index == 0) checked="checked" @endif />
+                            <div class="carousel-item absolute opacity-0 sm:h-80 h-56 ">
+                                <div class="mx-auto block h-full w-full bg-cover bg-right pt-6 md:items-center md:pt-0"
+                                    style="background-image: url('{{ asset($item) }}')">
+                                    <!--  add any content in this box  -->
+                                    <div class="container mx-auto"></div>
+                                </div>
                             </div>
 
-                        </label>
+                            @php
+                                // Carousel Index
+                                if ($index == 0) {
+                                    $str = 'carousel-' . $index + count($image_path);
+                                } else {
+                                    $str = 'carousel-' . $index;
+                                }
+                                
+                                if ($index == 4) {
+                                    $str2 = 'carousel-1';
+                                } else {
+                                    $str2 = 'carousel-' . $index + 2;
+                                }
+                            @endphp
+                            <label for="{{ $str }}"
+                                class="prev control-{{ $index + 1 }} absolute inset-y-0 left-0 z-10 my-auto ml-2 hidden h-10 w-10 cursor-pointer rounded-full bg-white bg-opacity-20 text-center text-3xl font-bold leading-tight text-black hover:bg-gray-900 hover:text-white md:ml-10">‹</label>
+                            <label for="{{ $str2 }}"
+                                class="next control-{{ $index + 1 }} absolute inset-y-0 right-0 z-10 my-auto mr-2 hidden h-10 w-10 cursor-pointer rounded-full bg-white bg-opacity-20 text-center text-3xl font-bold leading-tight text-black hover:bg-gray-900 hover:text-white md:mr-10">›</label>
+                        @endforeach
 
+                        <!-- slide indicators -->
+                        <ol class="carousel-indicators">
+                            @foreach ($image_path as $index => $item)
+                                <li class="mr-3 inline-block">
+
+                                    <label for="carousel-{{ $index + 1 }}"
+                                        class="carousel-bullet block cursor-pointer text-4xl text-gray-400 hover:text-gray-900">•</label>
+
+                                </li>
+                            @endforeach
+                        </ol>
                     </div>
                 </div>
-                {{-- @if ($product_picture)
-                    <img height="150" width="150" src="{{ $product_picture[$index]->temporaryUrl() }}">
-                @endif --}}
-            @endforeach
 
+                <style>
+                    .carousel-open:checked+.carousel-item {
+                        position: static;
+                        opacity: 100;
+                    }
+
+                    .carousel-item {
+                        -webkit-transition: opacity 0.4s ease-in-out;
+                        transition: opacity 0.4s ease-in-out;
+                    }
+
+
+                    #carousel-1:checked~.control-1,
+                    #carousel-2:checked~.control-2,
+                    #carousel-3:checked~.control-3,
+                    #carousel-4:checked~.control-4,
+                    #carousel-5:checked~.control-5 {
+                        display: block;
+                    }
+
+                    .carousel-indicators {
+                        list-style: none;
+                        margin: 0;
+                        padding: 0;
+                        position: absolute;
+                        bottom: 2%;
+                        left: 0;
+                        right: 0;
+                        text-align: center;
+                        z-index: 10;
+                    }
+
+                    #carousel-1:checked~.control-1~.carousel-indicators li:nth-child(1) .carousel-bullet,
+                    #carousel-2:checked~.control-2~.carousel-indicators li:nth-child(2) .carousel-bullet,
+                    #carousel-3:checked~.control-3~.carousel-indicators li:nth-child(3) .carousel-bullet,
+                    #carousel-4:checked~.control-4~.carousel-indicators li:nth-child(4) .carousel-bullet,
+                    #carousel-5:checked~.control-5~.carousel-indicators li:nth-child(5) .carousel-bullet {
+                        color: #000;
+                        /*Set to match the Tailwind colour you want the active one to be */
+                    }
+                </style>
+
+
+            </div>
         </div>
-        <div class="grid grid-flow-row grid-cols-5 gap-2">
-            @if ($product_picture)
-                @foreach ($product_picture as $item)
-                    {{-- <button type="button"
-                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    wire:click="$emit('openPreview2', '{{ $item->temporaryUrl() }}')">Preview</button> --}}
-                    <img height="150" width="150" src="{{ $item->temporaryUrl() }}">
-                @endforeach
-            @endif
-        </div>
-        {{-- <div class="w-full">
-            @php
-                
-                dd($product_picture);
-            @endphp
-        </div> --}}
-        <!-- END drop files @ images div -->
+        {{-- CAROUSEL end --}}
 
         <div class="flex select-none flex-row gap-5 rounded-md  p-2 sm:h-auto sm:flex-row sm:p-4">
             <!-- START Prodct LEFT x3 SEC div -->
@@ -76,7 +113,7 @@
                         <label for="product_title"
                             class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Product
                             Title</label>
-                        <input type="text" wire:model="product_title"
+                        <input type="text" wire:model="product_title" disabled
                             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                             placeholder="Product Title" required />
                     </div>
@@ -84,7 +121,7 @@
                         <label for="product_description"
                             class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Product
                             Description</label>
-                        <textarea id="product_description" wire:model="product_description" cols="20" rows="10"
+                        <textarea id="product_description" wire:model="product_description" disabled cols="20" rows="10"
                             placeholder="Description"
                             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400""></textarea>
                     </div>
@@ -98,7 +135,7 @@
                     <label for="product_location"
                         class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Product
                         Location</label>
-                    <input type="text" wire:model="product_location"
+                    <input type="text" wire:model="product_location" disabled
                         class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         placeholder="Product Location" required />
                 </div>
@@ -106,7 +143,7 @@
                     <label for="product_category"
                         class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Product
                         Category</label>
-                    <select id="product_category" name="product_category" wire:model="product_category"
+                    <select id="product_category" name="product_category" wire:model="product_category" disabled
                         class="form-select block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
                         <option>Please Choose</option>
                         @php
@@ -152,14 +189,14 @@
                 <div class="mb-2">
                     <label for="product_price"
                         class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Price</label>
-                    <input type="text" wire:model="product_price"
+                    <input type="text" wire:model="product_price" disabled
                         class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         placeholder="RM" required />
                 </div>
                 <div class="mb-2">
                     <label for="product_condition"
                         class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Condition</label>
-                    <select wire:model="product_condition"
+                    <select wire:model="product_condition" disabled
                         class="form-select block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
                         <option>Select</option>
                         <option value="New">New</option>
@@ -178,7 +215,7 @@
                         Stock
                         <span class="italic text-gray-700 text-sm">( Insert a value and ENTER, maximum 100 )</span>
                     </label>
-                    <input type="integer" wire:model="product_quantity" wire:keydown.enter="add"
+                    <input type="integer" wire:model="product_quantity" wire:keydown.enter="add" disabled
                         class="block w-20 rounded-lg border border-gray-300 bg-gray-50 pl-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         placeholder="Quantity" required />
                 </div>
@@ -201,7 +238,7 @@
                             class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Asset
                             Number</label>
                         @foreach ($inputs as $key => $value)
-                            <input type="text" wire:model="product_asset_no.{{ $value }}"
+                            <input type="text" wire:model="product_asset_no.{{ $value }}" disabled
                                 class="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                                 placeholder="Product Assest Number" required />
                         @endforeach
@@ -216,7 +253,7 @@
                             class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Serial
                             Number</label>
                         @foreach ($inputs as $key => $value)
-                            <input type="text" wire:model="product_serial_no.{{ $value }}"
+                            <input type="text" wire:model="product_serial_no.{{ $value }}" disabled
                                 class="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 "
                                 placeholder="Product Serial Number" required />
                         @endforeach
@@ -229,7 +266,7 @@
                         class="inline-flex items-center mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Eligible
                         for
                         discount
-                        <input wire:model="product_isDiscounted" type="checkbox"
+                        <input wire:model="product_isDiscounted" type="checkbox" disabled
                             class="form-checkbox h-6 w-6 text-pink-500" />
 
                     </label>
@@ -250,13 +287,13 @@
                         Visibility</label>
                     <div class="flex flex-row gap-4">
                         <label class="inline-flex items-center">
-                            <input name="product_visibility" type="radio"
+                            <input name="product_visibility" type="radio" disabled
                                 class="form-checkbox h-6 w-6 text-pink-500" value="PV01"
                                 wire:model="product_visibility" />
                             <span class="ml-2 text-black">Staff</span>
                         </label>
                         <label class="inline-flex items-center">
-                            <input name="product_visibility" type="radio"
+                            <input name="product_visibility" type="radio" disabled
                                 class="form-checkbox h-6 w-6 text-green-500" value="PV02"
                                 wire:model="product_visibility" />
                             <span class="ml-2 text-black">Public</span>
@@ -271,17 +308,7 @@
     <!-- START Button div -->
     <div class="flex flex-row items-center justify-end gap-5 rounded-md bg-white p-2 sm:h-auto sm:flex-row sm:p-4">
         <div class="flex h-auto flex-col rounded-xl sm:w-36">
-            <button wire:click="backto_buylist()" class="btn-danger">Cancel</button>
-        </div>
-        <div class="flex h-auto flex-col rounded-xl sm:w-36">
-            <button class="btn-gray" type="submit" wire:click="param('savedraft')">Save
-                as draft</button>
-        </div>
-        <div class="flex h-auto flex-col rounded-xl sm:w-36">
-            <button wire:click="preview()" class="btn-info">Preview Ad</button>
-        </div>
-        <div class="flex h-auto flex-col rounded-xl sm:w-36">
-            <button class="btn-shadow" wire:click="param('post')">Post</button>
+            <button wire:click="backtoedit()" class="btn-danger">Back</button>
         </div>
     </div>
     <!-- END stock no div -->
